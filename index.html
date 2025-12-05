@@ -1,80 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Scroll Rotate 3D</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Logo page</title>
+
+  <!-- Bebas Neue -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      margin: 0;
-      height: 300vh; /* makes page scrollable */
-      background: #111;
-      color: white;
-      font-family: sans-serif;
+    :root{
+      --bg:#000;
+      --text:#ffffff;
+      /* glow color (rgba equivalent of #FF0085FF) */
+      --glow: rgba(255,0,133,1);
     }
-    canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      display: block;
+
+    html,body{
+      height:100%;
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family: 'Bebas Neue', sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* center content */
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:3vh 2rem;
+      box-sizing:border-box;
+    }
+
+    .card{
+      text-align:center;
+      width:100%;
+      max-width:960px;
+    }
+
+    /* responsive image switch handled by <picture> */
+    .logo{
+      display:block;
+      margin:0 auto 1.25rem;
+      max-width:90%;
+      height:auto;
+      width:auto;
+    }
+
+    /* Links styling */
+    .links{
+      display:flex;
+      gap:2rem;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .links a{
+      color:var(--text);
+      text-decoration: underline;
+      font-size: clamp(1.1rem, 2.6vw, 2.2rem);
+      line-height:1;
+      transition: color .18s ease, text-shadow .18s ease;
+      /* keep a little letter spacing typical of display fonts */
+      letter-spacing: 0.02em;
+    }
+
+    /* Hover / focus glow */
+    .links a:hover,
+    .links a:focus{
+      color: var(--glow);
+      text-shadow:
+        0 0 6px var(--glow),
+        0 0 18px rgba(255,0,133,0.55),
+        0 0 36px rgba(255,0,133,0.25);
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* small screens stack links vertically */
+    @media (max-width:420px){
+      .links{
+        flex-direction:column;
+        gap:1rem;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="wrap">
+    <div class="card">
+      <!-- change the media breakpoint or add more <source> rules if needed -->
+      <picture>
+        <!-- narrow screens: use square logo -->
+        <source srcset="logoSquare.png" media="(max-width:600px)">
+        <!-- default: long logo -->
+        <img class="logo" src="logoLong.png" alt="Logo">
+      </picture>
 
-  <canvas id="webgl"></canvas>
+      <nav class="links" aria-label="Primary links">
+        <a href="https://play.google.com/store/apps/dev?id=5719059213853849971&hl=en_US"
+            target="_blank" rel="noopener noreferrer">
+            Google Play Store
+        </a>
 
-  <script type="module">
-    import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-    import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
-
-    const canvas = document.getElementById("webgl");
-    const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(
-      60,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      100
-    );
-    camera.position.z = 3;
-
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-
-    let model;
-
-    const loader = new GLTFLoader();
-    loader.load(
-      "totem.glb",  // <-- drop your file in the same folder
-      (gltf) => {
-        model = gltf.scene;
-        scene.add(model);
-      }
-    );
-
-    function animate() {
-      requestAnimationFrame(animate);
-
-      if (model) {
-        // scrollPercent goes from 0 to 1
-        const scrollPercent =
-          window.scrollY / (document.body.scrollHeight - window.innerHeight);
-
-        // rotate based on scroll
-        model.rotation.y = scrollPercent * Math.PI * 4; // 2 full turns
-      }
-
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    window.addEventListener("resize", () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  </script>
-
+        <!-- root-relative link to the index.html inside /portfolios/saebyul -->
+        <a href="portfolios/saebyul/index.html">
+            About
+        </a>
+        </nav>
+    </div>
+  </div>
 </body>
 </html>
