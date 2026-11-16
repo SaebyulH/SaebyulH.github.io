@@ -1,816 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Saebyul Hong</title>
-<style>
-  :root {
-    --chrome: #c6c6c6;
-    --chrome-light: #f4f4f4;
-    --chrome-dark: #696969;
-    --ink: #111111;
-    --navy: #000080;
-    --link: #0000cc;
-    --red: #cc0000;
-    --yellow: #ffcc00;
-  }
-
-  * { box-sizing: border-box; }
-
-  html { background: #727272; }
-
-  body {
-    margin: 0;
-    min-height: 100vh;
-    color: var(--ink);
-    font-family: "Times New Roman", Times, serif;
-    font-size: 16px;
-    background-color: #8c8c8c;
-    background-image:
-      linear-gradient(45deg, rgba(255,255,255,.035) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.035) 75%),
-      linear-gradient(45deg, rgba(255,255,255,.035) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.035) 75%);
-    background-size: 8px 8px;
-    background-position: 0 0, 4px 4px;
-  }
-
-  a { color: var(--link); }
-  a:visited { color: #551a8b; }
-  a:hover { color: var(--red); }
-  a:focus-visible { outline: 2px dotted var(--red); outline-offset: 2px; }
-
-  .desktop { padding: 24px 12px 48px; }
-
-  .window {
-    width: 980px;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 10px;
-    background: var(--chrome);
-    border: 1px solid #333;
-    border-top-color: #f5f5f5;
-    border-left-color: #f5f5f5;
-    border-right-color: #444;
-    border-bottom-color: #444;
-    border-radius: 9px;
-    box-shadow:
-      0 0 0 2px #1b1b1b,
-      5px 7px 0 rgba(0,0,0,.35),
-      inset 1px 1px 0 #f5f5f5,
-      inset -1px -1px 0 #686868;
-  }
-
-  .titlebar {
-    display: flex;
-    align-items: stretch;
-    gap: 8px;
-    padding: 2px 2px 9px;
-  }
-
-  .title-plate {
-    flex: 1;
-    min-width: 0;
-    padding: 7px 18px 9px;
-    text-align: center;
-    background: linear-gradient(#ffffff, #f4f4f4 72%, #e6e6e6);
-    border: 2px solid;
-    border-color: #7b7b7b #ffffff #ffffff #7b7b7b;
-    box-shadow: inset 1px 1px 0 #b8b8b8, inset -1px -1px 0 #ffffff;
-  }
-
-  .title-small {
-    display: block;
-    margin-bottom: 1px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 9px;
-    font-weight: bold;
-    letter-spacing: .18em;
-    color: #666;
-  }
-
-  .title-name {
-    display: block;
-    font-family: "Times New Roman", Times, serif;
-    font-size: 28px;
-    font-weight: normal;
-    line-height: 1;
-    color: #222;
-  }
-
-  .title-tab {
-    position: relative;
-    flex: none;
-    width: 132px;
-    background: linear-gradient(#dddddd, #b6b6b6);
-    border: 2px solid;
-    border-color: #ffffff #757575 #757575 #ffffff;
-  }
-
-  .title-tab::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 20px;
-    right: 20px;
-    height: 18px;
-    transform: translateY(-50%);
-    background: repeating-linear-gradient(180deg, #a8a8a8 0 2px, #dedede 2px 4px);
-    border: 1px solid;
-    border-color: #737373 #ffffff #ffffff #737373;
-  }
-
-  .window-body {
-    display: flex;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .sidebar {
-    width: 208px;
-    flex: none;
-    padding: 10px;
-    background: linear-gradient(90deg, #d0d0d0, #bdbdbd);
-    border: 2px solid;
-    border-color: #ffffff #6f6f6f #6f6f6f #ffffff;
-  }
-
-  .logo-box {
-    padding: 12px 10px 9px;
-    text-align: center;
-    background: #ffffff;
-    border: 2px solid;
-    border-color: #747474 #ffffff #ffffff #747474;
-  }
-
-  .logo-mark {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 78px;
-    height: 78px;
-    margin: 0 auto 8px;
-    background: linear-gradient(180deg,
-      #e8362e 0 20%, #ff9500 20% 40%, #ffcc00 40% 60%,
-      #34a853 60% 80%, #1768c4 80% 100%);
-    border: 2px solid #111;
-    box-shadow:
-      inset 2px 2px 0 rgba(255,255,255,.55),
-      inset -2px -2px 0 rgba(0,0,0,.25);
-  }
-
-  .logo-mark::before {
-    content: "";
-    position: absolute;
-    inset: 14px 7px;
-    background: #ffffff;
-    border: 2px solid #111;
-  }
-
-  .logo-mark span {
-    position: relative;
-    z-index: 1;
-    font-family: "Times New Roman", Times, serif;
-    font-size: 30px;
-    font-weight: bold;
-    letter-spacing: -3px;
-    color: #000;
-  }
-
-  .logo-caption {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 9px;
-    font-weight: bold;
-    line-height: 1.25;
-    letter-spacing: .12em;
-    color: #333;
-  }
-
-  .vents {
-    height: 13px;
-    margin: 11px 2px 2px;
-    background: repeating-linear-gradient(180deg, #aaaaaa 0 2px, #dedede 2px 4px);
-    border-top: 1px solid #ffffff;
-    border-bottom: 1px solid #777777;
-    box-shadow: inset 0 1px 0 #929292;
-  }
-
-  .side-nav {
-    list-style: none;
-    margin: 16px 0 14px;
-    padding: 0;
-  }
-
-  .side-nav li { margin: 0 0 9px; }
-
-  .side-nav a {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    font-family: "Times New Roman", Times, serif;
-    font-style: italic;
-    font-size: 18px;
-    line-height: 1.1;
-    color: var(--link);
-    text-decoration: underline;
-  }
-
-  .side-nav a:hover { color: var(--red); }
-
-  .orb {
-    display: inline-block;
-    flex: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1px solid #111b63;
-    background: radial-gradient(circle at 34% 27%,
-      #b7c8ff 0%, #6f86e8 22%, #263c9e 55%, #0a1455 100%);
-    box-shadow:
-      inset -2px -2px 3px rgba(0,0,0,.55),
-      inset 2px 2px 3px rgba(255,255,255,.65),
-      0 1px 0 #eeeeee;
-  }
-
-  .content-shell {
-    flex: 1;
-    min-width: 0;
-    padding: 9px;
-    background: var(--chrome);
-    border: 2px solid;
-    border-color: #707070 #ffffff #ffffff #707070;
-  }
-
-  .main-panel {
-    min-height: 100%;
-    padding: 18px 22px 22px;
-    background: #ffffff;
-    border: 2px solid;
-    border-color: #666666 #ffffff #ffffff #666666;
-    box-shadow: inset 1px 1px 0 #a8a8a8;
-  }
-
-  .hero {
-    margin: 0;
-    text-align: center;
-    font-family: "Times New Roman", Times, serif;
-    font-size: 54px;
-    font-weight: bold;
-    line-height: 1;
-    color: #d00000;
-    letter-spacing: .01em;
-  }
-
-  .connection {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 14px 0 20px;
-    padding: 5px 8px;
-    background: #d9d9d9;
-    border: 1px solid;
-    border-color: #666666 #ffffff #ffffff #666666;
-    box-shadow: inset 1px 1px 0 #6b6b6b, inset -1px -1px 0 #fbfbfb;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 11px;
-  }
-
-  .connection-label {
-    font-weight: bold;
-    letter-spacing: .06em;
-    color: #222;
-  }
-
-  .connection a { color: var(--link); }
-
-  .led {
-    display: inline-block;
-    width: 9px;
-    height: 9px;
-    flex: none;
-    border-radius: 50%;
-    border: 1px solid #003300;
-    background: radial-gradient(circle at 35% 30%, #b8ffb8, #00b000 55%, #006000);
-    box-shadow: inset 1px 1px 1px rgba(255,255,255,.7), 0 0 4px #00cc00;
-  }
-
-  .section-heading {
-    margin: 26px 0 10px;
-    padding: 0 0 5px;
-    font-family: "Times New Roman", Times, serif;
-    font-size: 27px;
-    font-weight: bold;
-    line-height: 1.1;
-    color: var(--navy);
-    border-bottom: 2px solid var(--navy);
-  }
-
-  .section-heading::before {
-    content: "\25C6";
-    margin-right: 7px;
-    font-size: 16px;
-    color: var(--red);
-  }
-
-  .promo-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .promo {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 186px;
-    padding: 14px;
-    overflow: hidden;
-    border: 2px solid #161616;
-    box-shadow:
-      inset 1px 1px 0 rgba(255,255,255,.38),
-      inset -1px -1px 0 rgba(0,0,0,.35);
-  }
-
-  .promo h3 {
-    margin: 6px 0 7px;
-    font-family: "Times New Roman", Times, serif;
-    font-size: 25px;
-    line-height: 1.05;
-  }
-
-  .promo p {
-    margin: 0 0 12px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    line-height: 1.45;
-  }
-
-  .promo .promo-link {
-    margin: auto 0 0;
-    padding-top: 8px;
-    font-size: 10px;
-    font-weight: bold;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  .promo-eyebrow {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 9px;
-    font-weight: bold;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--yellow);
-  }
-
-  .promo-navy {
-    color: #ffffff;
-    background: linear-gradient(135deg, #00006e 0%, #000080 52%, #141b73 100%);
-  }
-
-  .promo-navy .promo-link a { color: #ffef70; }
-
-  .ribbon {
-    position: absolute;
-    top: 13px;
-    right: -44px;
-    width: 150px;
-    padding: 3px 0;
-    transform: rotate(45deg);
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 9px;
-    font-weight: bold;
-    letter-spacing: .16em;
-    color: #ffffff;
-    background: var(--red);
-    border-top: 1px solid #ff8888;
-    border-bottom: 1px solid #650000;
-  }
-
-  .promo-yellow {
-    color: #4d0000;
-    text-align: center;
-    background: linear-gradient(135deg, #ffdd33, #ffc400);
-  }
-
-  .promo-yellow h3 { color: #a40000; }
-
-  .promo-yellow .promo-link a { color: var(--link); }
-
-  .hex {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 3px;
-    clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%);
-    background: linear-gradient(145deg, #87d8cc, #13756a 65%, #064a43);
-    color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 26px;
-    font-weight: bold;
-    line-height: 64px;
-    text-align: center;
-    text-shadow: 0 1px 0 #000000;
-  }
-
-  .subhead {
-    margin: 22px 0 8px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: #333;
-  }
-
-  .table-wrap {
-    padding: 2px;
-    background: #ffffff;
-    border: 2px solid;
-    border-color: #777777 #ffffff #ffffff #777777;
-    overflow-x: auto;
-  }
-
-  .project-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-  }
-
-  .project-table th {
-    padding: 5px 7px;
-    text-align: left;
-    font-size: 10px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: #ffffff;
-    background: var(--navy);
-    border-right: 1px solid #ffffff;
-  }
-
-  .project-table th:last-child { border-right: 0; }
-
-  .project-table td {
-    padding: 7px;
-    vertical-align: top;
-    line-height: 1.35;
-    color: #222222;
-    border-top: 1px solid #999999;
-    border-right: 1px solid #c8c8c8;
-  }
-
-  .project-table td:last-child { border-right: 0; }
-  .project-table tr:nth-child(even) td { background: #ececec; }
-  .project-table tr:nth-child(odd) td { background: #fafafa; }
-  .project-table a { font-weight: bold; }
-
-  .badge {
-    display: inline-block;
-    padding: 1px 5px;
-    font-size: 10px;
-    color: #333333;
-    white-space: nowrap;
-    background: #e1e1e1;
-    border: 1px solid #999999;
-    box-shadow: inset 1px 1px 0 #ffffff;
-  }
-
-  .all-repos {
-    margin: 10px 0 0;
-    text-align: right;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 11px;
-  }
-
-  .paper {
-    padding: 14px 16px;
-    background: #f6f6f6;
-    border: 1px solid #a0a0a0;
-    box-shadow: inset 2px 2px 0 #d4d4d4;
-  }
-
-  .skills { margin: 0; }
-
-  .skills dt {
-    position: relative;
-    margin: 14px 0 3px;
-    padding-left: 14px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    color: var(--navy);
-  }
-
-  .skills dt:first-child { margin-top: 0; }
-
-  .skills dt::before {
-    content: "";
-    position: absolute;
-    top: 4px;
-    left: 0;
-    width: 7px;
-    height: 7px;
-    background: var(--red);
-    border: 1px solid #650000;
-  }
-
-  .skills dd {
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.45;
-  }
-
-  .cannot {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 11px;
-    padding: 14px;
-    font-family: "Times New Roman", Times, serif;
-    font-size: 22px;
-    font-weight: bold;
-    color: #a80000;
-    background: #e9e9e9;
-    border: 2px solid;
-    border-color: #777777 #ffffff #ffffff #777777;
-    box-shadow: inset 1px 1px 0 #999999;
-  }
-
-  .stop {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    flex: none;
-    border-radius: 50%;
-    border: 1px solid #500000;
-    color: #ffffff;
-    background: radial-gradient(circle at 35% 30%, #ff9a9a, #cc0000 60%, #780000);
-    box-shadow: inset 1px 1px 0 #ffcccc;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 17px;
-    line-height: 1;
-  }
-
-  .contact-box {
-    padding: 13px;
-    background: #ffffff;
-    border: 1px solid #a0a0a0;
-    box-shadow: inset 2px 2px 0 #dedede;
-    font-size: 17px;
-  }
-
-  .contact-box a { font-weight: bold; }
-
-  .toolbar {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
-    padding: 6px;
-    background: #bdbdbd;
-    border: 2px solid;
-    border-color: #ffffff #6e6e6e #6e6e6e #ffffff;
-  }
-
-  .tool-button {
-    padding: 6px 12px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: #111111;
-    background: linear-gradient(#f6f6f6, #c4c4c4);
-    border: 2px solid;
-    border-color: #ffffff #666666 #666666 #ffffff;
-    border-radius: 4px;
-  }
-
-  .tool-button:hover { color: #000000; background: linear-gradient(#ffffff, #d8d8d8); }
-  .tool-button:active { transform: translateY(1px); }
-
-  .status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-left: auto;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 10px;
-    color: #333333;
-    white-space: nowrap;
-  }
-
-  @media (max-width: 820px) {
-    html, body { overflow-x: hidden; }
-    .desktop { padding: 10px 6px 30px; }
-    .window { width: 100%; padding: 6px; border-radius: 6px; }
-    .titlebar { gap: 6px; }
-    .title-plate { padding: 6px 10px 7px; }
-    .title-name { font-size: 21px; }
-    .title-tab { display: none; }
-    .window-body { display: block; }
-    .sidebar {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px 12px;
-      width: auto;
-      min-width: 0;
-      margin-bottom: 8px;
-      padding: 8px;
-    }
-    .logo-box {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      flex: none;
-      padding: 5px 7px;
-    }
-    .logo-mark { width: 46px; height: 46px; margin: 0; }
-    .logo-mark::before { inset: 8px 4px; }
-    .logo-mark span { font-size: 19px; letter-spacing: -2px; }
-    .logo-caption { display: none; }
-    .vents { display: none; }
-    .sidebar nav { flex: 1 1 100%; min-width: 0; }
-    .side-nav {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-      gap: 3px 14px;
-      margin: 0;
-    }
-    .side-nav li { margin: 0; }
-    .side-nav a { gap: 6px; font-size: 15px; }
-    .orb { width: 15px; height: 15px; }
-    .content-shell { padding: 6px; }
-    .main-panel { padding: 14px 12px 16px; }
-    .hero { font-size: 38px; }
-    .promo-grid { grid-template-columns: minmax(0, 1fr); }
-    .promo { min-width: 0; }
-    .promo h3, .promo p { overflow-wrap: anywhere; }
-    .section-heading { font-size: 22px; }
-    .table-wrap { width: 100%; }
-    .project-table { width: 100%; min-width: 0; table-layout: fixed; }
-    .project-table th:nth-child(3),
-    .project-table td:nth-child(3) { display: none; }
-    .project-table th:nth-child(1),
-    .project-table td:nth-child(1) { width: 38%; }
-    .project-table th, .project-table td { overflow-wrap: anywhere; }
-    .all-repos { text-align: left; }
-    .status { width: 100%; margin-left: 0; padding: 3px 2px 0; }
-  }
-</style>
-</head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Saebyul Hong — 3D Artist and Game Developer</title>
+	<meta name="description" content="Saebyul Hong, 3D artist and game developer.">
+	<link rel="stylesheet" href="assets/site.css">
+</head>x
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div id="top"></div>
 <div class="desktop">
-  <div class="window">
-    <div class="titlebar">
-      <div class="title-plate">
-        <span class="title-small">PERSONAL HOME PAGE</span>
-        <span class="title-name">Saebyul Hong</span>
-      </div>
-      <div class="title-tab" aria-hidden="true"></div>
-    </div>
+	<div class="window">
+		<div class="titlebar">
+			<div class="title-plate">
+				<span class="title-small">PERSONAL HOME PAGE</span>
+			</div>
+			<div class="title-tab" aria-hidden="true"></div>
+		</div>
 
-    <div class="window-body">
-      <aside class="sidebar">
-        <div class="logo-box">
-          <div class="logo-mark" aria-hidden="true"><span>SH</span></div>
-          <div class="logo-caption">SAEBYUL<br>HONG</div>
-        </div>
-        <div class="vents" aria-hidden="true"></div>
-        <nav aria-label="Site">
-          <ul class="side-nav">
-            <li><a href="#projects"><span class="orb" aria-hidden="true"></span>Projects</a></li>
-            <li><a href="#can"><span class="orb" aria-hidden="true"></span>Things I can do</a></li>
-            <li><a href="#cannot"><span class="orb" aria-hidden="true"></span>Things I cannot do</a></li>
-            <li><a href="#contact"><span class="orb" aria-hidden="true"></span>Contact</a></li>
-            <li><a href="https://github.com/SaebyulH"><span class="orb" aria-hidden="true"></span>GitHub</a></li>
-          </ul>
-        </nav>
-      </aside>
+		<div class="window-body">
+			<aside class="sidebar">
+				<div class="logo-box">
+					<div class="logo-mark" aria-hidden="true"><span>s_h</span></div>
+					<div class="logo-caption">SAEBYUL<br>HONG</div>
+				</div>
+				<div class="vents" aria-hidden="true"></div>
+				<nav aria-label="Site">
+					<ul class="side-nav">
+						<li><a href="#top"><span class="orb" aria-hidden="true"></span>Home</a></li>
+						<li><a href="#games"><span class="orb" aria-hidden="true"></span>Games</a></li>
+						<li><a href="#apps"><span class="orb" aria-hidden="true"></span>Mobile Apps</a></li>
+						<li><a href="#film"><span class="orb" aria-hidden="true"></span>Film</a></li>
+						<li><a href="#languages"><span class="orb" aria-hidden="true"></span>Teaching &amp; Languages</a></li>
+						<li><a href="#skills"><span class="orb" aria-hidden="true"></span>Things I can do</a></li>
+						<li><a href="#cannot"><span class="orb" aria-hidden="true"></span>Things I cannot do</a></li>
+						<li><a href="#contact"><span class="orb" aria-hidden="true"></span>Contact</a></li>
+						<li><a href="https://github.com/SaebyulH" target="_blank" rel="noopener noreferrer"><span class="orb" aria-hidden="true"></span>GitHub</a></li>
+						<li><a href="https://devpost.com/StarshineStudios" target="_blank" rel="noopener noreferrer"><span class="orb" aria-hidden="true"></span>Devpost</a></li>
+					</ul>
+					<p class="side-extra"><a href="credentials.html">Credentials (plain text)</a></p>
+				</nav>
+			</aside>
 
-      <div class="content-shell">
-        <main class="main-panel">
-          <h1 class="hero">Projects</h1>
+			<div class="content-shell">
+				<main class="main-panel" id="main">
+					<header class="hero-block" aria-labelledby="welcome">
+						<p class="hero-welcome">Welcome to the Home Page of</p>
+						<h1 class="hero" id="welcome">Saebyul Hong</h1>
+						<p class="hero-tagline">3D Artist and Game Developer</p>
+					</header>
 
-          <div class="connection">
-            <span><span class="connection-label">CONNECTION:</span> <a href="https://github.com/SaebyulH">github.com/SaebyulH</a></span>
-            <span class="led" aria-hidden="true"></span>
-          </div>
+					<div class="connection">
+						<span><span class="connection-label">CONNECTION:</span> <a href="https://github.com/SaebyulH" target="_blank" rel="noopener noreferrer">github.com/SaebyulH</a></span>
+						<span class="led" aria-hidden="true"></span>
+					</div>
 
-          <section id="projects" aria-label="Featured projects">
-            <div class="promo-grid">
-              <article class="promo promo-navy">
-                <span class="ribbon">NEW</span>
-                <div class="promo-eyebrow">Godot 4 / Multiplayer</div>
-                <h3>MultiplayerSystem3D</h3>
-                <p>A multiplayer 3D battler with rollback networking, bots, spectator mode, and a separate mobile build.</p>
-                <p class="promo-link"><a href="https://github.com/SaebyulH/MultiplayerSystem3D">View source &raquo;</a></p>
-              </article>
+					<section id="games" aria-labelledby="games-title">
+						<h2 class="section-heading" id="games-title">Games</h2>
 
-              <article class="promo promo-yellow">
-                <div class="hex" aria-hidden="true">SI</div>
-                <h3>SI-entific</h3>
-                <p>A Flutter game for learning SI units. Design, programming, and art by Saebyul Hong.</p>
-                <p class="promo-link"><a href="https://github.com/SaebyulH/si_entific">View on GitHub &raquo;</a></p>
-              </article>
-            </div>
+						<div class="promo-grid">
+							<article class="promo promo-navy">
+								<span class="ribbon">NEW</span>
+								<h3>MultiplayerSystem3D</h3>
+								<p>A multiplayer 3D battler with rollback networking, bots, spectator mode, and a separate mobile build.</p>
+								<p class="promo-badges"><span class="badge">Godot 4</span> <span class="badge">GDScript</span></p>
+								<p class="promo-link"><a href="https://github.com/SaebyulH/MultiplayerSystem3D" target="_blank" rel="noopener noreferrer">View source &raquo;</a></p>
+							</article>
 
-            <h2 class="subhead">More projects</h2>
-            <div class="table-wrap">
-              <table class="project-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Project</th>
-                    <th scope="col">About</th>
-                    <th scope="col">Built with</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><a href="https://github.com/SaebyulH/Simple3DGame">Simple3DGame</a></td>
-                    <td>A first-person 3D game with dialogue, inventory, weapons, ragdolls, and lip-sync.</td>
-                    <td><span class="badge">Godot 4</span></td>
-                  </tr>
-                  <tr>
-                    <td><a href="https://github.com/SaebyulH/romanice">Romanice</a></td>
-                    <td>Inflects Latin and Romance languages.</td>
-                    <td><span class="badge">Flutter</span></td>
-                  </tr>
-                  <tr>
-                    <td><a href="https://github.com/SaebyulH/chromaguesser">Chromaguesser</a></td>
-                    <td>Learn to judge RGB values by eye.</td>
-                    <td><span class="badge">Flutter</span></td>
-                  </tr>
-                  <tr>
-                    <td><a href="https://github.com/SaebyulH/filmmakerstoolbox">Filmmaker's Toolbox</a></td>
-                    <td>Practical tools for filmmakers, on a phone.</td>
-                    <td><span class="badge">Flutter</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="all-repos"><a href="https://github.com/SaebyulH">All repositories on GitHub &raquo;</a></p>
-          </section>
+							<article class="promo promo-yellow">
+								<h3>Simple3DGame</h3>
+								<p>A first-person 3D game with dialogue, inventory, weapons, ragdolls, and lip-sync.</p>
+								<p class="promo-badges"><span class="badge">Godot 4</span> <span class="badge">Dialogic</span></p>
+								<p class="promo-link"><a href="https://github.com/SaebyulH/Simple3DGame" target="_blank" rel="noopener noreferrer">View source &raquo;</a></p>
+							</article>
+						</div>
+					</section>
 
-          <section id="can" aria-labelledby="can-title">
-            <h2 class="section-heading" id="can-title">Things I can do</h2>
-            <div class="paper">
-              <dl class="skills">
-                <dt>Blender</dt>
-                <dd>I've been doing Blender since 8th grade, so I know my way around it pretty well. I've used it for film VFX, video game assets, and 3D printing. I also use it for graphic design and video editing because I don't want to use Adobe products.</dd>
+					<section id="apps" aria-labelledby="apps-title">
+						<h2 class="section-heading" id="apps-title">Mobile Apps</h2>
 
-                <dt>Godot</dt>
-                <dd>I am making some stuff in Godot.</dd>
+						<div class="crt-grid">
+							<article class="crt-card">
+								<a class="crt" href="https://github.com/SaebyulH/si_entific" target="_blank" rel="noopener noreferrer">
+									<span class="crt-brand" aria-hidden="true">Fake Electronics Brand · Model 96</span>
+									<span class="crt-screen">
+										<img src="assets/si_entific.png" alt="SI-entific banner: a white SI hexagon on a teal background with scattered SI-unit hexagons" width="1024" height="499" loading="lazy" decoding="async">
+									</span>
+									<span class="crt-caption">View source on GitHub &raquo; <span class="visually-hidden">(opens in a new tab)</span></span>
+								</a>
+								<h3>SI-entific</h3>
+								<p>An educational game for learning the International System of Units (Système international/SI). Merge the 7 basic SI units to create more complex ones and gain an intuitive understanding of scientific units.</p>
+								<p class="badge-row"><span class="badge">Flutter</span> <span class="badge">Dart</span></p>
+							</article>
 
-                <dt>Linguistics / Languages</dt>
-                <dd>In 12th grade, I figured that since I had been studying Latin since 9th grade and found it so fun, I could also try taking the Spanish AP test to see if I could pass. I studied Spanish-Latin linguistic shifts (rather than do a normal Spanish course) and after a few months somehow passed with a 3. Since then, my Spanish has become way better than my Latin since there are much better resources for Spanish and it's pretty hard to practice speaking Latin with people. As a Korean heritage speaker, I am now doing this for Japanese, since it is very similar structurally to Korean.</dd>
+							<article class="crt-card">
+								<a class="crt" href="https://github.com/SaebyulH/chromaguesser" target="_blank" rel="noopener noreferrer">
+									<span class="crt-brand" aria-hidden="true">Fake Electronics Brand · Model 96</span>
+									<span class="crt-screen">
+										<img src="assets/chromaguesser.png" alt="Chromaguesser banner: serif title over rainbow color bands on a dark navy background" width="1024" height="499" loading="lazy" decoding="async">
+									</span>
+									<span class="crt-caption">View source on GitHub &raquo; <span class="visually-hidden">(opens in a new tab)</span></span>
+								</a>
+								<h3>Chromaguesser</h3>
+								<p>Practice guessing the exact RGB values of random colors to eventually develop the ability to point to literally anything and say things like “this wall looks like (230, 45, 38)”.</p>
+								<p class="badge-row"><span class="badge">Flutter</span> <span class="badge">Dart</span></p>
+							</article>
 
-                <dt>Video Editing</dt>
-                <dd>I've made a handful of short films so I can do it. I don't do it all that much anymore, though.</dd>
+							<article class="crt-card">
+								<a class="crt" href="https://github.com/SaebyulH/romanice" target="_blank" rel="noopener noreferrer">
+									<span class="crt-brand" aria-hidden="true">Fake Electronics Brand · Model 96</span>
+									<span class="crt-screen">
+										<img src="assets/romanice.png" alt="Romanice banner: a typewriter and European flags around the Romanice title" width="1024" height="499" loading="lazy" decoding="async">
+									</span>
+									<span class="crt-caption">View source on GitHub &raquo; <span class="visually-hidden">(opens in a new tab)</span></span>
+								</a>
+								<h3>Romanice</h3>
+								<p>Learn Romance language conjugation with flashcards.</p>
+								<p>Fun fact: I was not allowed to make Latin an official language supported by the app for whatever reason, so it is actually disguised Finnish. If your phone is in Finnish, the app will set itself to Latin.</p>
+								<p class="badge-row"><span class="badge">Flutter</span> <span class="badge">Dart</span></p>
+							</article>
 
-                <dt>Flutter / Dart</dt>
-                <dd>I made a few apps in Flutter back in high school and uploaded them to the Google Play Store. After I focused on other stuff, Google rather annoyingly deleted my Google Play account for inactivity. I will probably get back to it at some point after I learn Japanese.</dd>
-              </dl>
-            </div>
-          </section>
+							<article class="crt-card">
+								<a class="crt" href="https://github.com/SaebyulH/filmmakerstoolbox" target="_blank" rel="noopener noreferrer">
+									<span class="crt-brand" aria-hidden="true">Fake Electronics Brand · Model 96</span>
+									<span class="crt-screen">
+										<img src="assets/film_toolbox.png" alt="Filmmaker's Toolbox banner: film strips, a camera, lights, and the Filmmaker's Toolbox title" width="1024" height="499" loading="lazy" decoding="async">
+									</span>
+									<span class="crt-caption">View source on GitHub &raquo; <span class="visually-hidden">(opens in a new tab)</span></span>
+								</a>
+								<h3>Filmmaker's Toolbox</h3>
+								<p>Tools for filmmakers, like the ability to turn your phone into a colored strobe light for lighting, etc.</p>
+								<p class="badge-row"><span class="badge">Flutter</span> <span class="badge">Dart</span></p>
+							</article>
+						</div>
 
-          <section id="cannot" aria-labelledby="cannot-title">
-            <h2 class="section-heading" id="cannot-title">Things I cannot do</h2>
-            <div class="cannot">
-              <span class="stop" aria-hidden="true">&times;</span>
-              <span>Web development.</span>
-            </div>
-          </section>
+						<h3 class="subhead">More</h3>
+						<div class="table-wrap">
+							<table class="project-table">
+								<thead>
+									<tr>
+										<th scope="col">Project</th>
+										<th scope="col">About</th>
+										<th scope="col">Built with</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><a href="https://github.com/SaebyulH/HanKan" target="_blank" rel="noopener noreferrer">HanKan</a></td>
+										<td>Learn Hanzi, Kanji, Hanja, and Chữ Hán.</td>
+										<td><span class="badge">C++</span></td>
+									</tr>
+									<tr>
+										<td><a href="https://github.com/SaebyulH/linguax" target="_blank" rel="noopener noreferrer">Linguax</a></td>
+										<td>Language learning app.</td>
+										<td><span class="badge">Dart</span></td>
+									</tr>
+									<tr>
+										<td><a href="https://github.com/SaebyulH/latin-to-spanish" target="_blank" rel="noopener noreferrer">latin-to-spanish</a></td>
+										<td>Predicts the sound and spelling changes from Latin to Spanish.</td>
+										<td><span class="badge">Dart</span></td>
+									</tr>
+									<tr>
+										<td><a href="https://github.com/SaebyulH/settlersOfDune" target="_blank" rel="noopener noreferrer">settlersOfDune</a></td>
+										<td>Early project.</td>
+										<td><span class="badge">Dart</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<p class="all-repos"><a href="https://github.com/SaebyulH" target="_blank" rel="noopener noreferrer">All repositories on GitHub &raquo;</a> · <a href="https://devpost.com/StarshineStudios" target="_blank" rel="noopener noreferrer">Devpost &raquo;</a></p>
+					</section>
 
-          <section id="contact" aria-labelledby="contact-title">
-            <h2 class="section-heading" id="contact-title">Contact</h2>
-            <div class="contact-box">
-              contact me at <a href="mailto:saebyulhong101@gmail.com">saebyulhong101@gmail.com</a>
-            </div>
-          </section>
-        </main>
-      </div>
-    </div>
+					<section id="film" aria-labelledby="film-title">
+						<h2 class="section-heading" id="film-title">Film</h2>
 
-    <div class="toolbar">
-      <a class="tool-button" href="#top">Home</a>
-      <a class="tool-button" href="#projects">Projects</a>
-      <a class="tool-button" href="https://github.com/SaebyulH">GitHub</a>
-      <a class="tool-button" href="mailto:saebyulhong101@gmail.com">Email</a>
-      <span class="status"><span class="led" aria-hidden="true"></span>Last updated 16 November 2026</span>
-    </div>
-  </div>
+						<div class="film-grid">
+							<div class="tv">
+								<div class="tv-brand" aria-hidden="true">Fake Electronics Brand · Color TV</div>
+								<div class="tv-screen">
+									<div class="tv-video">
+										<iframe src="https://www.youtube-nocookie.com/embed/nAoxaddF1C8" title="Saebyul Hong Film Reel 2024" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+									</div>
+								</div>
+								<div class="tv-controls" aria-hidden="true">
+									<span class="tv-knob"></span>
+									<span class="tv-knob"></span>
+									<span class="tv-speaker"></span>
+									<span class="led"></span>
+								</div>
+							</div>
+
+							<div class="film-side">
+								<div class="stat-strip">
+									<div class="stat"><b>5.2M</b><span>Total views</span></div>
+									<div class="stat"><b>16.3K</b><span>Subscribers</span></div>
+									<div class="stat"><b>12</b><span>Videos</span></div>
+								</div>
+								<div class="paper">
+									<p class="panel-kicker">YouTube, 2020–2023</p>
+									<p>Youtube Creator</p>
+									<p class="panel-kicker">Film awards</p>
+									<p>Completely written, shot, edited, and submitted within 48 hours. </p>
+                  <p> 3rd Place, Best Film. Also won best cinematography, best graphics, best special effects, and best costume design. </p>
+									<p><a href="https://www.youtube.com/watch?v=nAoxaddF1C8" target="_blank" rel="noopener noreferrer">Watch on YouTube &raquo;</a></p>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section id="languages" aria-labelledby="languages-title">
+						<h2 class="section-heading" id="languages-title">Teaching &amp; Languages</h2>
+
+						<div class="split-grid">
+							<div class="paper">
+								<p class="panel-kicker">Teaching</p>
+								<dl class="mini-list">
+									<dt>Wyzant · Tutor · June 2024–present</dt>
+									<dd>Blender, computer animation, app development, SAT prep.</dd>
+									<dt>Kozmikos · Programmer · May 2023–present</dt>
+									<dd>Independent educational mobile app company.</dd>
+								</dl>
+							</div>
+
+							<div class="paper">
+								<p class="panel-kicker">Languages</p>
+								<table class="lang-table">
+									<thead>
+										<tr>
+											<th scope="col">Language</th>
+											<th scope="col">Level</th>
+											<th scope="col">Notes</th>
+										</tr>
+									</thead>
+									<tbody>
+                    
+										<tr><td>English</td><td>Native</td><td>—</td></tr>
+										<tr><td>Korean</td><td>Decent</td><td>Heritage speaker</td></tr>
+										<tr><td>Spanish</td><td>I am one of the speanish speakers of all time</td><td>Learned through Latin starting 12th grade</td></tr>
+										<tr><td>Latin</td><td>Ehhh</td><td>started ninth grade, but not that focused on it now.</td></tr>
+										<tr><td>Japanese</td><td>Ok-ish</td><td>Currently learning</td></tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</section>
+
+					<section id="skills" aria-labelledby="skills-title">
+						<h2 class="section-heading" id="skills-title">Things I can do</h2>
+						<div class="paper">
+							<dl class="skills">
+								<dt>Blender</dt>
+								<dd>I've been doing Blender since 8th grade, so I know my way around it well. I've used it for film VFX, video game assets, and 3D printing. I also use it for graphic design and video editing because I don't want to bother using Adobe products.</dd>
+
+								<dt>Godot</dt>
+								<dd>I am making some stuff in Godot. see above</dd>
+
+								<dt>Linguistics / Languages</dt>
+								<dd>In 12th grade, I figured that since I had been studying Latin since 9th grade and found it so fun, I could also try taking the Spanish AP test to see if I could pass. I studied historical Latin to spanish linguistic shifts (rather than do a normal Spanish course) and after a few months somehow passed with a 3. Since then, my Spanish has become way better than my Latin since there are much better resources for Spanish and it turns out it's pretty hard to practice speaking Latin with people. As a Korean heritage speaker, I am now doing this for Japanese, since it is very similar structurally to Korean.</dd>
+
+								<dt>Video Editing</dt>
+								<dd>I've made a handful of short films so I can do it. I don't do it all that much anymore, though.</dd>
+
+								<dt>Teaching</dt>
+								<dd>I technically am still a tutor for blender, but I'm kind of busy so I don't do it much nowadays. If you want a lesson, though, email me.</dd>
+
+								<dt>Flutter / Dart</dt>
+								<dd>I made a few apps in Flutter back in high school and uploaded them to the Google Play Store. After I focused on other stuff, Google rather annoyingly deleted my Google Play account for inactivity. I will probably get back to it at some point after I learn Japanese.</dd>
+							</dl>
+						</div>
+					</section>
+
+					<section id="cannot" aria-labelledby="cannot-title">
+						<h2 class="section-heading" id="cannot-title">Things I cannot do</h2>
+						<div class="paper">
+							<p>&times; Web development. I am not good at it at all.</p>
+						</div>
+					</section>
+
+					<section id="contact" aria-labelledby="contact-title">
+						<h2 class="section-heading" id="contact-title">Contact</h2>
+						<div class="contact-box">
+							<a href="mailto:saebyulhong101@gmail.com">saebyulhong101@gmail.com</a><br>
+							<a href="https://github.com/SaebyulH" target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="https://devpost.com/StarshineStudios" target="_blank" rel="noopener noreferrer">Devpost</a> · <a href="https://www.linkedin.com/in/saebyul" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+						</div>
+					</section>
+
+					<footer class="retro-footer">
+						<span class="netscape-badge">Best viewed in Netscape Navigator 4.0 at 800×600</span>
+						<span class="visitor">Visitor No. <span aria-hidden="true">NaN</span></span>
+						<span>Last updated 16 November 2026</span>
+					</footer>
+				</main>
+			</div>
+		</div>
+
+		<div class="toolbar">
+			<a class="tool-button" href="#top">Home</a>
+			<a class="tool-button" href="#games">Games</a>
+			<a class="tool-button" href="#apps">Apps</a>
+			<a class="tool-button" href="https://github.com/SaebyulH" target="_blank" rel="noopener noreferrer">GitHub</a>
+			<a class="tool-button" href="https://devpost.com/StarshineStudios" target="_blank" rel="noopener noreferrer">Devpost</a>
+			<a class="tool-button" href="mailto:saebyulhong101@gmail.com">Email</a>
+			<span class="status"><span class="led" aria-hidden="true"></span>Last updated 16 November 2026</span>
+		</div>
+	</div>
 </div>
 </body>
 </html>
